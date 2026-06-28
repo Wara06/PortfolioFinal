@@ -178,6 +178,55 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  /* ─── BACKGROUND GLOW ORBS — Fluid Aurora Animation ─── */
+  var bgOrb1 = document.querySelector('.bg-glow-orb--1');
+  var bgOrb2 = document.querySelector('.bg-glow-orb--2');
+  var bgOrb3 = document.querySelector('.bg-glow-orb--3');
+
+  function floatOrb(el, x, y, scale, dur) {
+    if (!el) return;
+    gsap.set(el, { x: 0, y: 0, scale: 1 });
+    gsap.to(el, {
+      x: x, y: y, scale: scale,
+      duration: dur,
+      ease: 'sine.inOut',
+      repeat: -1,
+      yoyo: true,
+    });
+  }
+
+  floatOrb(bgOrb1, 50, -40, 1.12, 8);
+  floatOrb(bgOrb2, -40, 50, 0.85, 10);
+
+  /* Mouse gravity for center orb — damped follow */
+  if (bgOrb3) {
+    var state = { x: 50, y: 50 };
+    gsap.set(bgOrb3, { xPercent: -50, yPercent: -50 });
+
+    document.addEventListener('mousemove', function (e) {
+      var tx = (e.clientX / window.innerWidth) * 100;
+      var ty = (e.clientY / window.innerHeight) * 100;
+      gsap.to(state, {
+        x: tx,
+        y: ty,
+        duration: 2,
+        ease: 'power2.out',
+        overwrite: 'auto',
+        onUpdate: function () {
+          gsap.set(bgOrb3, { left: state.x + '%', top: state.y + '%' });
+        }
+      });
+    });
+
+    gsap.to(bgOrb3, {
+      scale: 1.15,
+      duration: 5,
+      ease: 'sine.inOut',
+      repeat: -1,
+      yoyo: true,
+    });
+  }
+
   /* ─── REFRESH ScrollTrigger (layout settled) ─── */
   ScrollTrigger.refresh();
 });
